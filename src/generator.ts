@@ -108,7 +108,7 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 	}
 
 	if (t.isInterfaceNode(node)) {
-		return `${importedName}.shape({\n${generate(node.types, {
+		return `${importedName}.exact({\n${generate(node.types, {
 			...options,
 			shouldInclude: undefined,
 		})}\n})`;
@@ -173,7 +173,7 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 			if (t.isInstanceOfNode(obj)) {
 				return `${obj.type}.${obj.instance}`;
 			} else if (t.isInterfaceNode(obj)) {
-				// An interface is PropTypes.shape
+				// An interface is PropTypes.exact
 				// Use `ShapeNode` to get it sorted in the correct order
 				return `ShapeNode`;
 			}
