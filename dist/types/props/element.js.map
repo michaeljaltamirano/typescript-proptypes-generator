@@ -1,0 +1,1 @@
+{"version":3,"file":"element.js","sourceRoot":"","sources":["../../../src/types/props/element.ts"],"names":[],"mappings":";;;AAEA,IAAM,UAAU,GAAG,aAAa,CAAC;AAOjC,SAAgB,WAAW,CAAC,WAAwB;IACnD,OAAO;QACN,IAAI,EAAE,UAAU;QAChB,WAAW,aAAA;KACX,CAAC;AACH,CAAC;AALD,kCAKC;AAED,SAAgB,aAAa,CAAC,IAAU;IACvC,OAAO,IAAI,CAAC,IAAI,KAAK,UAAU,CAAC;AACjC,CAAC;AAFD,sCAEC"}

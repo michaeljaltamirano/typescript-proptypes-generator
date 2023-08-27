@@ -1,0 +1,1 @@
+{"version":3,"file":"any.js","sourceRoot":"","sources":["../../../src/types/props/any.ts"],"names":[],"mappings":";;;AAEA,IAAM,UAAU,GAAG,SAAS,CAAC;AAE7B,SAAgB,OAAO;IACtB,OAAO;QACN,IAAI,EAAE,UAAU;KAChB,CAAC;AACH,CAAC;AAJD,0BAIC;AAED,SAAgB,SAAS,CAAC,IAAU;IACnC,OAAO,IAAI,CAAC,IAAI,KAAK,UAAU,CAAC;AACjC,CAAC;AAFD,8BAEC"}
