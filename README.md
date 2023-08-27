@@ -65,7 +65,7 @@ output JS file:
 export const TestInterface = {
   booleanField: PropTypes.bool.isRequired,
   numericField: PropTypes.number.isRequired,
-  objectField: PropTypes.shape({
+  objectField: PropTypes.exact({
     booleanField: PropTypes.bool.isRequired,
     numericField: PropTypes.number.isRequired,
   }).isRequired,
