@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUndefinedNode = exports.undefinedNode = void 0;
-var typeString = 'UndefinedNode';
+const typeString = 'UndefinedNode';
 function undefinedNode() {
     return {
         type: typeString,

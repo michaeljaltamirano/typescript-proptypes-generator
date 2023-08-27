@@ -25,8 +25,8 @@ export function loadTSConfig(tsConfigPath: string) {
 	return options;
 }
 
-export function loadPrettierConfig(prettierConfigPath: string) { 
-	return prettier.resolveConfig.sync(prettierConfigPath);
+export async function loadPrettierConfig(prettierConfigPath: string) { 
+	return prettier.resolveConfig(prettierConfigPath);
 }
 
 function isString(x: any): x is string {

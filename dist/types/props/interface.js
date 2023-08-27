@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isInterfaceNode = exports.interfaceNode = void 0;
-var typeString = 'InterfaceNode';
+const typeString = 'InterfaceNode';
 function interfaceNode(types) {
     return {
         type: typeString,

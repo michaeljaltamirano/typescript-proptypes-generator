@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isPropTypeNode = exports.propTypeNode = void 0;
-var typeString = 'PropTypeNode';
+const typeString = 'PropTypeNode';
 function propTypeNode(name, jsDoc, propType) {
     return {
         type: typeString,
-        name: name,
-        jsDoc: jsDoc,
-        propType: propType,
+        name,
+        jsDoc,
+        propType,
     };
 }
 exports.propTypeNode = propTypeNode;

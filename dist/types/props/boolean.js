@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isBooleanNode = exports.booleanNode = void 0;
-var typeString = 'BooleanNode';
+const typeString = 'BooleanNode';
 function booleanNode() {
     return {
         type: typeString,

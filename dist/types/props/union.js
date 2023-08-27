@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUnionNode = exports.unionNode = void 0;
-var typeString = 'UnionNode';
+const typeString = 'UnionNode';
 function unionNode(types) {
-    var flatTypes = [];
+    const flatTypes = [];
     flattenTypes(types);
     function flattenTypes(nodes) {
-        nodes.forEach(function (x) {
+        nodes.forEach((x) => {
             if (isUnionNode(x)) {
                 flattenTypes(x.types);
             }

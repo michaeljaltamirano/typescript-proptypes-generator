@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isNumericNode = exports.numericNode = void 0;
-var typeString = 'NumericNode';
+const typeString = 'NumericNode';
 function numericNode() {
     return {
         type: typeString,

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isElementNode = exports.elementNode = void 0;
-var typeString = 'ElementNode';
+const typeString = 'ElementNode';
 function elementNode(elementType) {
     return {
         type: typeString,
-        elementType: elementType,
+        elementType,
     };
 }
 exports.elementNode = elementNode;

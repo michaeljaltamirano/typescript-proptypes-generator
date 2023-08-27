@@ -1,5 +1,5 @@
 import { Node } from '../nodes/baseNodes';
-declare type ElementType = 'element' | 'node' | 'elementType';
+type ElementType = 'element' | 'node' | 'elementType';
 interface ElementNode extends Node {
     elementType: ElementType;
 }

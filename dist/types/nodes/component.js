@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isComponentNode = exports.componentNode = void 0;
-var typeString = 'ComponentNode';
+const typeString = 'ComponentNode';
 function componentNode(name, types) {
     return {
         type: typeString,
