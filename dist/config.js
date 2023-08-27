@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAbsolutePath = exports.loadPrettierConfig = exports.loadTSConfig = void 0;
 const ts = __importStar(require("typescript"));
-const prettier_1 = __importDefault(require("prettier"));
+const prettier = __importStar(require("prettier"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 /**
@@ -46,7 +46,7 @@ function loadTSConfig(tsConfigPath) {
 }
 exports.loadTSConfig = loadTSConfig;
 async function loadPrettierConfig(prettierConfigPath) {
-    return prettier_1.default.resolveConfig(prettierConfigPath);
+    return prettier.resolveConfig(prettierConfigPath);
 }
 exports.loadPrettierConfig = loadPrettierConfig;
 function isString(x) {

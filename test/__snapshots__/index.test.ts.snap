@@ -8,7 +8,7 @@ These propTypes were auto-generated from the TypeScript definitions in: ../type.
 
 import PropTypes from 'prop-types';
 
-export const TestType = {
+export const TEST_TYPE_PROPS = {
 	booleanField: PropTypes.bool.isRequired,
 	numericField: PropTypes.number.isRequired,
 	objectField: PropTypes.exact({
@@ -27,7 +27,7 @@ These propTypes were auto-generated from the TypeScript definitions in: ../type.
 
 import PropTypes from 'prop-types';
 
-export const TestType = {
+export const TEST_TYPE_PROPS = {
 	booleanField: PropTypes.bool.isRequired,
 	numericField: PropTypes.number.isRequired,
 	objectField: PropTypes.exact({
@@ -46,7 +46,7 @@ These propTypes were auto-generated from the TypeScript definitions in: ../type.
 
 import PropTypes from 'prop-types';
 
-export const TestType = {
+export const TEST_TYPE_PROPS = {
 	booleanField: PropTypes.bool.isRequired,
 	numericField: PropTypes.number.isRequired,
 	objectField: PropTypes.exact({
@@ -65,7 +65,7 @@ These propTypes were auto-generated from the TypeScript definitions in: ../inter
 
 import PropTypes from 'prop-types';
 
-export const TestInterface = {
+export const TEST_INTERFACE_PROPS = {
 	booleanField: PropTypes.bool.isRequired,
 	numericField: PropTypes.number.isRequired,
 	objectField: PropTypes.exact({
@@ -84,7 +84,7 @@ These propTypes were auto-generated from the TypeScript definitions in: ../../te
 
 import PropTypes from 'prop-types';
 
-export const TestInterface = {
+export const TEST_INTERFACE_PROPS = {
 	booleanField: PropTypes.bool.isRequired,
 	numericField: PropTypes.number.isRequired,
 	objectField: PropTypes.exact({

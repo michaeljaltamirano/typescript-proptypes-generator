@@ -44,15 +44,15 @@ export default async function generate({
 	const program = parser.createProgram(files, tsconfig);
 
 	const promises = files.map<Promise<void>>(async inputFilePath => {
-		const inputFileExt = path.extname(inputFilePath);
+		const {dir, ext, name} = path.parse(inputFilePath);
 		if (absoluteOutputDir) {
-			const outputFileName = path.basename(inputFilePath).replace(inputFileExt, '.js');
+			const outputFileName = path.basename(inputFilePath).replace(ext, '.ts');
 			const outputFilePath = path.resolve(absoluteOutputDir, outputFileName);
 			return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
 		}
-		// If no output directory was provided, put generated JS the file adjacent to the input file
-		const outputFilePath = inputFilePath.replace(inputFileExt, '.js');
-		return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
+		const outputFileName = `${dir}/${name}-prop-types.ts`;
+		// If no output directory was provided, put generated TS the file adjacent to the input file
+		return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, { verbose });
 	});
 
 	await Promise.all(promises);

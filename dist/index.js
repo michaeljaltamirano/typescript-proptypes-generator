@@ -32,7 +32,7 @@ const path = __importStar(require("path"));
 const injector = __importStar(require("./injector"));
 const configure = __importStar(require("./config"));
 const parser = __importStar(require("./parser"));
-const prettier_1 = __importDefault(require("prettier"));
+const prettier = __importStar(require("prettier"));
 const glob_1 = require("glob");
 async function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfigPath, inputPattern, outputDir, verbose = false }) {
     const inputPaths = _.isString(inputPattern) ? [inputPattern] : inputPattern;
@@ -50,15 +50,15 @@ async function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfig
     const files = _.compact(_.flatten(allFiles));
     const program = parser.createProgram(files, tsconfig);
     const promises = files.map(async (inputFilePath) => {
-        const inputFileExt = path.extname(inputFilePath);
+        const { dir, ext, name } = path.parse(inputFilePath);
         if (absoluteOutputDir) {
-            const outputFileName = path.basename(inputFilePath).replace(inputFileExt, '.js');
+            const outputFileName = path.basename(inputFilePath).replace(ext, '.ts');
             const outputFilePath = path.resolve(absoluteOutputDir, outputFileName);
             return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
         }
-        // If no output directory was provided, put generated JS the file adjacent to the input file
-        const outputFilePath = inputFilePath.replace(inputFileExt, '.js');
-        return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
+        const outputFileName = `${dir}/${name}-prop-types.ts`;
+        // If no output directory was provided, put generated TS the file adjacent to the input file
+        return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, { verbose });
     });
     await Promise.all(promises);
 }
@@ -70,7 +70,7 @@ async function generateProptypesForFile(inputFilePath, outputFilePath, prettierC
         throw new Error(`Failed to generate prop types for ${inputFilePath}`);
     }
     if (prettierConfig) {
-        const prettified = await prettier_1.default.format(result, {
+        const prettified = await prettier.format(result, {
             ...prettierConfig,
             filepath: outputFilePath
         });

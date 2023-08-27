@@ -85,7 +85,8 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 		const comment =
 			options.comment &&
 			`// ${options.comment.split(/\r?\n/gm).reduce((prev, curr) => `${prev}\n// ${curr}`)}\n`;
-		return `export const ${node.name} = {\n${comment ? comment : ''}${generate(node.types, options)}\n}`;
+		const name = `${_.snakeCase(node.name).toUpperCase()}_PROPS`;
+		return `export const ${name} = {\n${comment ? comment : ''}${generate(node.types, options)}\n}`;
 	}
 
 	if (t.isPropTypeNode(node)) {
