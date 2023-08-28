@@ -135,14 +135,15 @@ function parseFromProgram(filePath, program, parserOptions = {}) {
                 checker.getTypeOfSymbolAtLocation(symbol, declaration)
             : // The properties of Record<..., ...> don't have a declaration, but the symbol has a type property
                 symbol.type;
-        if (!type) {
-            throw new Error('No types found');
-        }
         // Typechecker only gives the type "any" if it's present in a union
         // This means the type of "a" in {a?:any} isn't "any | undefined"
         // So instead we check for the questionmark to detect optional types
         let parsedType = undefined;
-        if (type.flags & ts.TypeFlags.Any && declaration && ts.isPropertySignature(declaration)) {
+        if (!type) {
+            console.log(`No type for ${symbol.getName()}, using non-required any`);
+            parsedType = t.unionNode([t.undefinedNode(), t.anyNode()]);
+        }
+        else if (type.flags & ts.TypeFlags.Any && declaration && ts.isPropertySignature(declaration)) {
             parsedType = declaration.questionToken
                 ? t.unionNode([t.undefinedNode(), t.anyNode()])
                 : t.anyNode();

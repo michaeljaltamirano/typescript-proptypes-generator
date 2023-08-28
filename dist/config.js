@@ -49,9 +49,6 @@ async function loadPrettierConfig(prettierConfigPath) {
     return prettier.resolveConfig(prettierConfigPath);
 }
 exports.loadPrettierConfig = loadPrettierConfig;
-function isString(x) {
-    return typeof x === "string";
-}
 function getAbsolutePath(relativePath) {
     return path_1.default.resolve(process.cwd(), relativePath);
 }

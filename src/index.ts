@@ -5,7 +5,7 @@ import * as injector from './injector';
 import * as configure from './config';
 import * as parser from './parser';
 import * as prettier from 'prettier';
-import {glob} from 'glob';
+import { glob } from 'glob';
 import * as ts from 'typescript';
 
 export interface Config {
@@ -13,7 +13,7 @@ export interface Config {
 	prettierConfig: string;
 	inputPattern: string | string[];
 	outputDir?: string;
-	verbose?: boolean,
+	verbose?: boolean;
 }
 
 export default async function generate({
@@ -21,38 +21,43 @@ export default async function generate({
 	prettierConfig: prettierConfigPath,
 	inputPattern,
 	outputDir,
-	verbose = false
+	verbose = false,
 }: Config) {
 	const inputPaths = _.isString(inputPattern) ? [inputPattern] : inputPattern;
-	// const absoluteTsConfigPath = configure.getAbsolutePath(tsConfigPath);
-	const absolutePrettierConfigPath = prettierConfigPath ? configure.getAbsolutePath(prettierConfigPath) : null;
+	const absolutePrettierConfigPath = prettierConfigPath
+		? configure.getAbsolutePath(prettierConfigPath)
+		: null;
 	const absoluteInputPatterns = inputPaths.map(configure.getAbsolutePath);
 	const absoluteOutputDir = outputDir && configure.getAbsolutePath(outputDir);
 	const tsconfig = configure.loadTSConfig(tsConfigPath);
-	const prettierConfig = absolutePrettierConfigPath ? await configure.loadPrettierConfig(absolutePrettierConfigPath) : null;
+	const prettierConfig = absolutePrettierConfigPath
+		? await configure.loadPrettierConfig(absolutePrettierConfigPath)
+		: null;
 	const allFiles = await Promise.all(
-		absoluteInputPatterns.map(absoluteInputPattern => {
+		absoluteInputPatterns.map((absoluteInputPattern) => {
 			return glob(absoluteInputPattern, {
 				absolute: true,
 			});
-		})
-	) 
-
-
+		}),
+	);
 
 	const files = _.compact(_.flatten(allFiles));
 	const program = parser.createProgram(files, tsconfig);
 
-	const promises = files.map<Promise<void>>(async inputFilePath => {
-		const {dir, ext, name} = path.parse(inputFilePath);
+	const promises = files.map<Promise<void>>(async (inputFilePath) => {
+		const { dir, ext, name } = path.parse(inputFilePath);
 		if (absoluteOutputDir) {
 			const outputFileName = path.basename(inputFilePath).replace(ext, '.ts');
 			const outputFilePath = path.resolve(absoluteOutputDir, outputFileName);
-			return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
+			return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, {
+				verbose,
+			});
 		}
 		const outputFileName = `${dir}/${name}-prop-types.ts`;
 		// If no output directory was provided, put generated TS the file adjacent to the input file
-		return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, { verbose });
+		return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, {
+			verbose,
+		});
 	});
 
 	await Promise.all(promises);
@@ -63,22 +68,23 @@ async function generateProptypesForFile(
 	outputFilePath: string,
 	prettierConfig: prettier.Options | null,
 	program: ts.Program,
-	options: { verbose: boolean }
+	options: { verbose: boolean },
 ): Promise<void> {
 	const proptypes = parser.parseFromProgram(inputFilePath, program, options);
 	const result = injector.inject(inputFilePath, outputFilePath, proptypes);
 
 	if (!result) {
-		throw new Error(`Failed to generate prop types for ${inputFilePath}`);
+		console.error(`Failed to generate prop types for ${inputFilePath}`);
+		return;
 	}
 
 	if (prettierConfig) {
 		const prettified = await prettier.format(result, {
 			...prettierConfig,
-			filepath: outputFilePath
+			filepath: outputFilePath,
 		});
 		return fse.outputFile(outputFilePath, prettified);
 	}
-	
+
 	return fse.outputFile(outputFilePath, result);
 }

@@ -124,7 +124,7 @@ function generate(node, options = {}) {
         let [literals, rest] = lodash_1.default.partition(node.types, t.isLiteralNode);
         literals = lodash_1.default.uniqBy(literals, (x) => x.value);
         rest = lodash_1.default.uniqBy(rest, (x) => (t.isInstanceOfNode(x) ? `${x.type}.${x.instance}` : x.type));
-        if (lodash_1.default.every(literals, literal => lodash_1.default.isString(literal))) {
+        if (lodash_1.default.every(literals, (literal) => lodash_1.default.isString(literal))) {
             literals = literals.sort((a, b) => a.value.localeCompare(b.value));
         }
         else if (lodash_1.default.every(literals, lodash_1.default.isNumber)) {

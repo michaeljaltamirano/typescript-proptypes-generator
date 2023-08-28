@@ -34,15 +34,18 @@ const configure = __importStar(require("./config"));
 const parser = __importStar(require("./parser"));
 const prettier = __importStar(require("prettier"));
 const glob_1 = require("glob");
-async function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfigPath, inputPattern, outputDir, verbose = false }) {
+async function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfigPath, inputPattern, outputDir, verbose = false, }) {
     const inputPaths = _.isString(inputPattern) ? [inputPattern] : inputPattern;
-    // const absoluteTsConfigPath = configure.getAbsolutePath(tsConfigPath);
-    const absolutePrettierConfigPath = prettierConfigPath ? configure.getAbsolutePath(prettierConfigPath) : null;
+    const absolutePrettierConfigPath = prettierConfigPath
+        ? configure.getAbsolutePath(prettierConfigPath)
+        : null;
     const absoluteInputPatterns = inputPaths.map(configure.getAbsolutePath);
     const absoluteOutputDir = outputDir && configure.getAbsolutePath(outputDir);
     const tsconfig = configure.loadTSConfig(tsConfigPath);
-    const prettierConfig = absolutePrettierConfigPath ? await configure.loadPrettierConfig(absolutePrettierConfigPath) : null;
-    const allFiles = await Promise.all(absoluteInputPatterns.map(absoluteInputPattern => {
+    const prettierConfig = absolutePrettierConfigPath
+        ? await configure.loadPrettierConfig(absolutePrettierConfigPath)
+        : null;
+    const allFiles = await Promise.all(absoluteInputPatterns.map((absoluteInputPattern) => {
         return (0, glob_1.glob)(absoluteInputPattern, {
             absolute: true,
         });
@@ -54,11 +57,15 @@ async function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfig
         if (absoluteOutputDir) {
             const outputFileName = path.basename(inputFilePath).replace(ext, '.ts');
             const outputFilePath = path.resolve(absoluteOutputDir, outputFileName);
-            return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, { verbose });
+            return generateProptypesForFile(inputFilePath, outputFilePath, prettierConfig, program, {
+                verbose,
+            });
         }
         const outputFileName = `${dir}/${name}-prop-types.ts`;
         // If no output directory was provided, put generated TS the file adjacent to the input file
-        return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, { verbose });
+        return generateProptypesForFile(inputFilePath, outputFileName, prettierConfig, program, {
+            verbose,
+        });
     });
     await Promise.all(promises);
 }
@@ -67,12 +74,13 @@ async function generateProptypesForFile(inputFilePath, outputFilePath, prettierC
     const proptypes = parser.parseFromProgram(inputFilePath, program, options);
     const result = injector.inject(inputFilePath, outputFilePath, proptypes);
     if (!result) {
-        throw new Error(`Failed to generate prop types for ${inputFilePath}`);
+        console.error(`Failed to generate prop types for ${inputFilePath}`);
+        return;
     }
     if (prettierConfig) {
         const prettified = await prettier.format(result, {
             ...prettierConfig,
-            filepath: outputFilePath
+            filepath: outputFilePath,
         });
         return fs_extra_1.default.outputFile(outputFilePath, prettified);
     }

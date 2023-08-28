@@ -47,12 +47,12 @@ function inject(inputFilePath, outputFilePath, propTypes) {
         plugins: [
             require.resolve('@babel/plugin-syntax-class-properties'),
             [require.resolve('@babel/plugin-transform-typescript'), { allExtensions: true, isTSX: true }],
-            plugin(propTypes, propTypesToInject, inputFilePath, outputFilePath)
+            plugin(propTypes, propTypesToInject, inputFilePath, outputFilePath),
         ],
         presets: ['@babel/preset-react'],
         configFile: false,
         babelrc: false,
-        retainLines: true
+        retainLines: true,
     });
     let code = result && result.code;
     if (!code) {
@@ -79,15 +79,15 @@ function plugin(propTypes, mapOfPropTypes, inputFilePath, outputFilePath) {
                     const relativeInputFilePath = path_1.default.relative(outputFilePath, inputFilePath);
                     visitPath.addComment('leading', `\nAUTO-GENERATED EDIT AT YOUR OWN PERIL:\nThese propTypes were auto-generated from the TypeScript definitions in: ${relativeInputFilePath}\n`);
                     visitPath.node.body = [
-                        addStatementWithWhitespace(mapOfPropTypes, "import PropTypes from 'prop-types'")
+                        addStatementWithWhitespace(mapOfPropTypes, "import PropTypes from 'prop-types'"),
                     ];
-                    propTypes.body.forEach(props => {
+                    propTypes.body.forEach((props) => {
                         const source = generator.generate(props);
                         visitPath.pushContainer('body', addStatementWithWhitespace(mapOfPropTypes, source));
                     });
-                }
-            }
-        }
+                },
+            },
+        },
     };
 }
 //# sourceMappingURL=injector.js.map

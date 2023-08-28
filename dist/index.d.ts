@@ -5,4 +5,4 @@ export interface Config {
     outputDir?: string;
     verbose?: boolean;
 }
-export default function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfigPath, inputPattern, outputDir, verbose }: Config): Promise<void>;
+export default function generate({ tsConfig: tsConfigPath, prettierConfig: prettierConfigPath, inputPattern, outputDir, verbose, }: Config): Promise<void>;
