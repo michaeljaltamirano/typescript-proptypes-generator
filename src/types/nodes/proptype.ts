@@ -11,7 +11,7 @@ export interface PropTypeNode extends Node {
 export function propTypeNode(
 	name: string,
 	jsDoc: string | undefined,
-	propType: Node
+	propType: Node,
 ): PropTypeNode {
 	return {
 		type: typeString,

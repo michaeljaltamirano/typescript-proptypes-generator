@@ -52,7 +52,7 @@ export function createProgram(files: string[], options: ts.CompilerOptions) {
 export function parseFile(
 	filePath: string,
 	options: ts.CompilerOptions,
-	parserOptions: Partial<ParserOptions> = {}
+	parserOptions: Partial<ParserOptions> = {},
 ) {
 	const program = ts.createProgram([filePath], options);
 	return parseFromProgram(filePath, program, parserOptions);
@@ -67,7 +67,7 @@ export function parseFile(
 export function parseFromProgram(
 	filePath: string,
 	program: ts.Program,
-	parserOptions: Partial<ParserOptions> = {}
+	parserOptions: Partial<ParserOptions> = {},
 ) {
 	const { checkDeclarations = false } = parserOptions;
 
@@ -113,7 +113,7 @@ export function parseFromProgram(
 			if (!type.isLiteral() && !type.isUnion()) {
 				try {
 					parsePropsType(node.name.getText(), type);
-				} catch(e) {
+				} catch (e) {
 					if (parserOptions.verbose) {
 						console.log(`Failed to parse ${node.name.getText()}: ${e}`);
 					}
@@ -133,8 +133,8 @@ export function parseFromProgram(
 		programNode.body.push(
 			t.componentNode(
 				name,
-				properties.map((x) => checkSymbol(x, [(type as any).id]))
-			)
+				properties.map((x) => checkSymbol(x, [(type as any).id])),
+			),
 		);
 	}
 
@@ -160,13 +160,13 @@ export function parseFromProgram(
 				name === 'React.ReactElement'
 			) {
 				const elementNode = t.elementNode(
-					name === 'React.ReactElement' ? 'element' : 'elementType'
+					name === 'React.ReactElement' ? 'element' : 'elementType',
 				);
 
 				return t.propTypeNode(
 					symbol.getName(),
 					getDocumentation(symbol),
-					declaration.questionToken ? t.unionNode([t.undefinedNode(), elementNode]) : elementNode
+					declaration.questionToken ? t.unionNode([t.undefinedNode(), elementNode]) : elementNode,
 				);
 			}
 		}
@@ -178,19 +178,18 @@ export function parseFromProgram(
 			: // The properties of Record<..., ...> don't have a declaration, but the symbol has a type property
 			  ((symbol as any).type as ts.Type);
 
-		if (!type) {
-			throw new Error('No types found');
-		}
-
 		// Typechecker only gives the type "any" if it's present in a union
 		// This means the type of "a" in {a?:any} isn't "any | undefined"
 		// So instead we check for the questionmark to detect optional types
 		let parsedType: t.Node | undefined = undefined;
-		if (type.flags & ts.TypeFlags.Any && declaration && ts.isPropertySignature(declaration)) {
+		if (!type) {
+			console.log(`No type for ${symbol.getName()}, using non-required any`);
+			parsedType = t.unionNode([t.undefinedNode(), t.anyNode()]);
+		} else if (type.flags & ts.TypeFlags.Any && declaration && ts.isPropertySignature(declaration)) {
 			parsedType = declaration.questionToken
 				? t.unionNode([t.undefinedNode(), t.anyNode()])
 				: t.anyNode();
-		} else {
+		}else {
 			parsedType = checkType(type, typeStack, symbol.getName());
 		}
 
@@ -261,7 +260,7 @@ export function parseFromProgram(
 			if (type.isLiteral()) {
 				return t.literalNode(
 					type.isStringLiteral() ? `"${type.value}"` : type.value,
-					getDocumentation(type.symbol)
+					getDocumentation(type.symbol),
 				);
 			}
 			return t.literalNode(checker.typeToString(type));
@@ -283,11 +282,11 @@ export function parseFromProgram(
 					shouldResolveObject({ name, propertyCount: properties.length, depth: typeStack.length })
 				) {
 					const filtered = properties.filter((symbol) =>
-						shouldInclude({ name: symbol.getName(), depth: typeStack.length + 1 })
+						shouldInclude({ name: symbol.getName(), depth: typeStack.length + 1 }),
 					);
 					if (filtered.length > 0) {
 						return t.interfaceNode(
-							filtered.map((x) => checkSymbol(x, [...typeStack, (type as any).id]))
+							filtered.map((x) => checkSymbol(x, [...typeStack, (type as any).id])),
 						);
 					}
 				}
@@ -305,7 +304,7 @@ export function parseFromProgram(
 		}
 
 		console.warn(
-			`Unable to handle node of type "ts.TypeFlags.${ts.TypeFlags[type.flags]}", using any`
+			`Unable to handle node of type "ts.TypeFlags.${ts.TypeFlags[type.flags]}", using any`,
 		);
 		return t.anyNode();
 	}

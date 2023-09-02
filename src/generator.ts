@@ -85,7 +85,8 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 		const comment =
 			options.comment &&
 			`// ${options.comment.split(/\r?\n/gm).reduce((prev, curr) => `${prev}\n// ${curr}`)}\n`;
-		return `export const ${node.name} = {\n${comment ? comment : ''}${generate(node.types, options)}\n}`;
+		const name = `${_.snakeCase(node.name).toUpperCase()}_PROPS`;
+		return `export const ${name} = {\n${comment ? comment : ''}${generate(node.types, options)}\n}`;
 	}
 
 	if (t.isPropTypeNode(node)) {
@@ -95,7 +96,7 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 		if (t.isUnionNode(propType) && propType.types.some(t.isUndefinedNode)) {
 			isOptional = true;
 			propType.types = propType.types.filter(
-				(prop) => !t.isUndefinedNode(prop) && !(t.isLiteralNode(prop) && prop.value === 'null')
+				(prop) => !t.isUndefinedNode(prop) && !(t.isLiteralNode(prop) && prop.value === 'null'),
 			);
 			if (propType.types.length === 1 && t.isLiteralNode(propType.types[0]) === false) {
 				propType = propType.types[0];
@@ -163,7 +164,7 @@ export function generate(node: t.Node | t.PropTypeNode[], options: GenerateOptio
 		literals = _.uniqBy(literals, (x) => x.value);
 		rest = _.uniqBy(rest, (x) => (t.isInstanceOfNode(x) ? `${x.type}.${x.instance}` : x.type));
 
-		if (_.every(literals, literal => _.isString(literal))) {
+		if (_.every(literals, (literal) => _.isString(literal))) {
 			literals = literals.sort((a, b) => a.value.localeCompare(b.value));
 		} else if (_.every(literals, _.isNumber)) {
 			literals = literals.sort();

@@ -9,7 +9,7 @@ import path from 'path';
  */
 export function loadTSConfig(tsConfigPath: string) {
 	const { config, error } = ts.readConfigFile(tsConfigPath, (filePath) =>
-		fs.readFileSync(filePath).toString()
+		fs.readFileSync(filePath).toString(),
 	);
 
 	if (error) throw error;
@@ -17,7 +17,7 @@ export function loadTSConfig(tsConfigPath: string) {
 	const { options, errors } = ts.parseJsonConfigFileContent(
 		config,
 		ts.sys,
-		path.dirname(tsConfigPath)
+		path.dirname(tsConfigPath),
 	);
 
 	if (errors.length > 0) throw errors[0];
@@ -25,12 +25,8 @@ export function loadTSConfig(tsConfigPath: string) {
 	return options;
 }
 
-export function loadPrettierConfig(prettierConfigPath: string) { 
-	return prettier.resolveConfig.sync(prettierConfigPath);
-}
-
-function isString(x: any): x is string {
-    return typeof x === "string";
+export async function loadPrettierConfig(prettierConfigPath: string) {
+	return prettier.resolveConfig(prettierConfigPath);
 }
 
 export function getAbsolutePath(relativePath: string): string {
